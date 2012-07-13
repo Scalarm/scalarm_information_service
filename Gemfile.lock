@@ -1,0 +1,14 @@
+PATH
+  remote: .
+  specs:
+    scalarm_information_service (0.0.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  scalarm_information_service!
