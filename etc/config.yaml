@@ -1,2 +1,7 @@
+# port for scalarm information service web server
 port: 11200
-managers_dir_path: /Users/dkrol
+# login and password to access this service
+login: eusas
+password: hidden
+# path to directory with managers zipped packages
+managers_dir_path: /cloud_data

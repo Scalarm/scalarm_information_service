@@ -27,11 +27,19 @@ module Scalarm
       @config["port"].to_i
     end
 
+    def credentials
+      [@config["login"], @config["password"]]
+    end
+
   end
 
 end
 
 sis = Scalarm::ScalarmInformationService.new
+
+use Rack::Auth::Basic, "Restricted Area" do |username, password|
+  [username, password] == sis.credentials
+end
 
 set :port, sis.server_port
 enable :run

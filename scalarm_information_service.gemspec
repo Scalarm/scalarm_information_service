@@ -16,6 +16,5 @@ Gem::Specification.new do |gem|
   gem.version       = ScalarmInformationService::VERSION
 
   gem.add_dependency("sinatra", "1.3.2")
-  #gem.add_dependency("sinatra-sugar", ">= 0.5.0")
   gem.add_dependency("daemons", "1.1.8")
 end
