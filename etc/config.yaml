@@ -5,3 +5,5 @@ login: eusas
 password: hidden
 # path to directory with managers zipped packages
 managers_dir_path: /cloud_data
+# time interval between node manager checking
+node_manager_guard_interval: 30

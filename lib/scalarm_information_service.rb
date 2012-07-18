@@ -1,10 +1,12 @@
 require "scalarm_information_service/version"
+require "node_manager_guard"
 require "sinatra"
 require "yaml"
+require 'data_mapper'
 
 module Scalarm
 
-  class ScalarmInformationService# < Sinatra::Base
+  class ScalarmInformationService
 
     def initialize
       spec = Gem::Specification.find_by_name("scalarm_information_service")
@@ -31,12 +33,39 @@ module Scalarm
       [@config["login"], @config["password"]]
     end
 
+    def db_file_path
+      @config["service_db_path"]
+    end
+
+    def register_node_manager(manager_uri)
+      NodeManager.create(:uri => manager_uri)
+    end
+
+    def node_managers
+      NodeManager.all.map{|node_manager| "#{node_manager.uri}---#{node_manager.registered_at}"}.join("|||")
+    end
+
+    def start_node_manager_guard
+      NodeManagerGuard.new(@config["node_manager_guard_interval"]).start_guard
+    end
+
   end
 
 end
 
-sis = Scalarm::ScalarmInformationService.new
+# data mapper initialization
+DataMapper::Logger.new($stdout, :debug)
+spec = Gem::Specification.find_by_name("scalarm_information_service")
+db_file_path = File.join(spec.gem_dir, "db", "information_service.db")
+DataMapper.setup(:default, "sqlite://#{db_file_path}")
+require "model/node_manager"
+DataMapper.finalize
+DataMapper.auto_upgrade!
 
+sis = Scalarm::ScalarmInformationService.new
+sis.start_node_manager_guard
+
+# sinatra web interface initialization
 use Rack::Auth::Basic, "Restricted Area" do |username, password|
   [username, password] == sis.credentials
 end
@@ -54,6 +83,16 @@ end
 
 get '/download_simulation_manager' do
   send_file sis.simulation_manager_file
+end
+
+# two param: :server and :port
+# server - ip with '.' replaced with '_'
+post '/register_node_manager' do
+  sis.register_node_manager("#{params[:server].gsub("_", ",")}:#{params[:port]}")
+end
+
+get '/node_managers' do
+  sis.node_managers
 end
 
 

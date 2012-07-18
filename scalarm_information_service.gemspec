@@ -17,4 +17,6 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency("sinatra", "1.3.2")
   gem.add_dependency("daemons", "1.1.8")
+  gem.add_dependency("data_mapper", "1.2.0")
+  gem.add_dependency("dm-sqlite-adapter", "1.2.0")
 end
