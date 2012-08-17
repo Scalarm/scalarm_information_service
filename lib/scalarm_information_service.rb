@@ -24,6 +24,14 @@ module Scalarm
     def simulation_manager_file
       File.join(@config["managers_dir_path"], "scalarm_simulation_manager.zip")
     end
+    
+    def simulation_code_file
+      File.join(@config["managers_dir_path"], "repository.tar.gz")
+    end
+    
+    def simulation_scenarios_file
+      File.join(@config["managers_dir_path"], "simulation_scenarios.zip")
+    end
 
     def server_port
       @config["port"].to_i
@@ -83,6 +91,14 @@ end
 
 get '/download_simulation_manager' do
   send_file sis.simulation_manager_file
+end
+
+get '/download_simulation_code' do
+  send_file sis.simulation_code_file
+end
+
+get '/download_simulation_scenarios' do
+  send_file sis.simulation_scenarios_file
 end
 
 # two param: :server and :port
