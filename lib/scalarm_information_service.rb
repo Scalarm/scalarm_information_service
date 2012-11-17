@@ -53,6 +53,32 @@ module Scalarm
       NodeManager.all.map{|node_manager| "#{node_manager.uri}---#{node_manager.registered_at}"}.join("|||")
     end
 
+    def register_db_instance(manager_uri)
+      DbInstance.create(:uri => manager_uri)
+    end
+
+    def deregister_db_instance(manager_uri)
+      db_instance = DbInstance.first(:uri => manager_uri)
+      db_instance.destroy
+    end
+
+    def db_instances
+      DbInstance.all.map{|instance| "#{instance.uri}---#{instance.registered_at}"}.join("|||")
+    end
+
+    def register_db_config_service(manager_uri)
+      DbConfigService.create(:uri => manager_uri)
+    end
+
+    def deregister_db_config_service(manager_uri)
+      db_config_service = DbConfigService.first(:uri => manager_uri)
+      db_config_service.destroy
+    end
+
+    def db_config_services
+      DbConfigService.all.map { |instance| "#{instance.uri}---#{instance.registered_at}" }.join("|||")
+    end
+
     def start_node_manager_guard
       NodeManagerGuard.new(@config["node_manager_guard_interval"]).start_guard
     end
@@ -67,6 +93,8 @@ spec = Gem::Specification.find_by_name("scalarm_information_service")
 db_file_path = File.join(spec.gem_dir, "db", "information_service.db")
 DataMapper.setup(:default, "sqlite://#{db_file_path}")
 require "model/node_manager"
+require "model/db_instance"
+require "model/db_config_service"
 DataMapper.finalize
 DataMapper.auto_upgrade!
 
@@ -110,6 +138,32 @@ end
 get '/node_managers' do
   sis.node_managers
 end
+
+post '/register_db_instance' do
+  sis.register_db_instance("#{params[:server].gsub("_", ",")}:#{params[:port]}")
+end
+
+post '/deregister_db_instance' do
+  sis.deregister_db_instance("#{params[:server].gsub("_", ",")}:#{params[:port]}")
+end
+
+get '/db_instances' do
+  sis.db_instances
+end
+
+post '/register_db_config_service' do
+  sis.register_db_config_service("#{params[:server].gsub("_", ",")}:#{params[:port]}")
+end
+
+post '/deregister_db_config_service' do
+  sis.deregister_db_config_service("#{params[:server].gsub("_", ",")}:#{params[:port]}")
+end
+
+get '/db_config_services' do
+  sis.db_config_services
+end
+
+
 
 
 
