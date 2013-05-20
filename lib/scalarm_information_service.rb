@@ -1,8 +1,11 @@
-require "scalarm_information_service/version"
-require "node_manager_guard"
-require "sinatra"
-require "yaml"
+require 'sinatra'
+require 'yaml'
 require 'data_mapper'
+require 'require_all'
+
+require_rel 'model'
+require 'node_manager_guard'
+require_relative 'scalarm_information_service/version'
 
 module Scalarm
 
@@ -79,6 +82,20 @@ module Scalarm
       DbConfigService.all.map { |instance| "#{instance.uri}---#{instance.registered_at}" }.join("|||")
     end
 
+    def register_log_bank(manager_uri)
+      LogBank.create(:uri => manager_uri)
+    end
+
+    def deregister_log_bank(manager_uri)
+      LogBank.find(:uri => manager_uri).each do |log_bank|
+        log_bank.destroy
+      end
+    end
+
+    def log_banks
+      LogBank.all.map { |instance| "#{instance.uri}---#{instance.registered_at}" }.join('|||')
+    end
+
     def start_node_manager_guard
       NodeManagerGuard.new(@config["node_manager_guard_interval"]).start_guard
     end
@@ -89,12 +106,10 @@ end
 
 # data mapper initialization
 DataMapper::Logger.new($stdout, :debug)
-spec = Gem::Specification.find_by_name("scalarm_information_service")
-db_file_path = File.join(spec.gem_dir, "db", "information_service.db")
+spec = Gem::Specification.find_by_name('scalarm_information_service')
+db_file_path = File.join(spec.gem_dir, 'db', 'information_service.db')
 DataMapper.setup(:default, "sqlite://#{db_file_path}")
-require "model/node_manager"
-require "model/db_instance"
-require "model/db_config_service"
+
 DataMapper.finalize
 DataMapper.auto_upgrade!
 
@@ -102,10 +117,16 @@ sis = Scalarm::ScalarmInformationService.new
 sis.start_node_manager_guard
 
 # sinatra web interface initialization
-use Rack::Auth::Basic, "Restricted Area" do |username, password|
+use Rack::Auth::Basic, 'Restricted Area' do |username, password|
   [username, password] == sis.credentials
 end
 
+require 'socket'
+host = ''
+# pinging google to get ip of our host
+UDPSocket.open { |s| s.connect('64.233.187.99', 1); host = s.addr.last } if host.nil?
+
+set :bind, host
 set :port, sis.server_port
 enable :run
 
@@ -162,6 +183,19 @@ end
 get '/db_config_services' do
   sis.db_config_services
 end
+
+post '/register_log_bank' do
+  sis.register_log_bank("#{params[:server].gsub("_", ",")}:#{params[:port]}")
+end
+
+post '/deregister_log_bank' do
+  sis.deregister_log_bank("#{params[:server].gsub("_", ",")}:#{params[:port]}")
+end
+
+get '/log_banks' do
+  sis.log_banks
+end
+
 
 
 
