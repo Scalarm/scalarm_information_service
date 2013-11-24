@@ -1,9 +1,0 @@
-# port for scalarm information service web server
-port: 11200
-# login and password to access this service
-login: eusas
-password: hidden
-# path to directory with managers zipped packages
-managers_dir_path: /cloud_data
-# time interval between node manager checking
-node_manager_guard_interval: 30
