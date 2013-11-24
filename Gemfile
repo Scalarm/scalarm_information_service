@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.0'
+gem 'rails', '4.0.1'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
@@ -27,7 +27,6 @@ gem 'turbolinks'
 group :assets do
   gem 'execjs'
   gem 'therubyracer', :platforms => :ruby
-  #gem 'johnson'
 end
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -42,15 +41,11 @@ end
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
 # Use unicorn as the app server
-# gem 'unicorn'
 gem 'thin'
-
-# Use Capistrano for deployment
-group :development do
-  gem 'capistrano', group: :development
-  #gem 'capistrano-thin', group: :development
-  gem 'rvm-capistrano', group: :development
-end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+# Rubinius dependencies
+gem 'rubysl'
+gem 'racc'
