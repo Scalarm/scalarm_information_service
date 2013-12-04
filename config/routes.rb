@@ -7,6 +7,10 @@ ScalarmInformationService::Application.routes.draw do
   post 'db_config_services/register'
   post 'db_config_services/deregister'
 
+  get 'db_routers/list'
+  post 'db_routers/register'
+  post 'db_routers/deregister'
+
   get 'storage/list'
   post 'storage/register'
   post 'storage/deregister'
