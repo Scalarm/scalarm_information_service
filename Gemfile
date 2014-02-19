@@ -47,5 +47,8 @@ gem 'thin'
 # gem 'debugger', group: [:development, :test]
 
 # Rubinius dependencies
-gem 'rubysl'
+platforms :rbx do
+  gem 'rubysl', '~> 2.0'
+  gem 'rubysl-openssl', '2.0.5'
+end
 gem 'racc'

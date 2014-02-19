@@ -332,7 +332,8 @@ DEPENDENCIES
   jquery-rails
   racc
   rails (= 4.0.1)
-  rubysl
+  rubysl (~> 2.0)
+  rubysl-openssl (= 2.0.5)
   sass-rails (~> 4.0.0)
   sdoc
   sqlite3
