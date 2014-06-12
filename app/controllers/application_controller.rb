@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
 
   def authenticate
     authenticate_or_request_with_http_basic do |username, password|
-      username == Rails.configuration.security[:login] && password == Rails.configuration.security[:password]
+      username == Rails.application.secrets.service_login && password == Rails.application.secrets.service_password
     end
   end
 end

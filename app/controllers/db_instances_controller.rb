@@ -8,10 +8,9 @@ class DbInstancesController < ApplicationController
       manager = DbInstance.new(address: address)
       manager.save
 
-      render inline: "Success: '#{address}' registered as DB instance"
+      render json: {status: 'ok', msg: "Success: '#{address}' has been registered as DbInstance"}
     else
-
-      render inline: "Failure: '#{address}' is already registered as DB instance", status: 500
+      render json: {status: 'error', msg: "Failure: '#{address}' is already registered as DbInstance"}, status: 500
     end
   end
 
@@ -24,14 +23,8 @@ class DbInstancesController < ApplicationController
   def deregister
     address = params[:address]
 
-    if DbInstance.where(address: address).blank?
+    DbInstance.destroy_all(address: address)
 
-      render inline: "Failure: There is no DB instance registered at '#{address}'", status: 500
-    else
-
-      DbInstance.destroy_all(address: address)
-
-      render inline: "Success: '#{address}' deregistered as DB instance"
-    end
+    render json: {status: 'ok', msg: "Success: '#{address}' has been deregistered as DbInstance"}
   end
 end

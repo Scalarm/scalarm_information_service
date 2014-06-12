@@ -8,10 +8,9 @@ class DbRoutersController < ApplicationController
       manager = DbRouter.new(address: address)
       manager.save
 
-      render inline: "Success: '#{address}' registered as DB router"
+      render json: {status: 'ok', msg: "Success: '#{address}' has been registered as DbRouter"}
     else
-
-      render inline: "Failure: '#{address}' is already registered as DB router", status: 500
+      render json: {status: 'error', msg: "Failure: '#{address}' is already registered as DbRouter"}, status: 500
     end
   end
 
@@ -24,15 +23,9 @@ class DbRoutersController < ApplicationController
   def deregister
     address = params[:address]
 
-    if DbRouter.where(address: address).blank?
+    DbRouter.destroy_all(address: address)
 
-      render inline: "Failure: There is no DB router registered at '#{address}'", status: 500
-    else
-
-      DbRouter.destroy_all(address: address)
-
-      render inline: "Success: '#{address}' deregistered as DB router"
-    end
+    render json: {status: 'ok', msg: "Success: '#{address}' has been deregistered as DbRouter"}
   end
 
 end

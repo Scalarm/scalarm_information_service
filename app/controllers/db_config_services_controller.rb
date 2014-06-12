@@ -8,10 +8,9 @@ class DbConfigServicesController < ApplicationController
       manager = DbConfigService.new(address: address)
       manager.save
 
-      render inline: "Success: '#{address}' registered as DB config service"
+      render json: {status: 'ok', msg: "Success: '#{address}' has been registered as DbConfigService"}
     else
-
-      render inline: "Failure: '#{address}' is already registered as DB config service", status: 500
+      render json: {status: 'error', msg: "Failure: '#{address}' is already registered as DbConfigService"}, status: 500
     end
   end
 
@@ -24,14 +23,8 @@ class DbConfigServicesController < ApplicationController
   def deregister
     address = params[:address]
 
-    if DbConfigService.where(address: address).blank?
+    DbConfigService.destroy_all(address: address)
 
-      render inline: "Failure: There is no DB config service registered at '#{address}'", status: 500
-    else
-
-      DbConfigService.destroy_all(address: address)
-
-      render inline: "Success: '#{address}' deregistered as DB config service"
-    end
+    render json: {status: 'ok', msg: "Success: '#{address}' has been deregistered as DbConfigService"}
   end
 end

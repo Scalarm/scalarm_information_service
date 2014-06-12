@@ -9,7 +9,10 @@ gem 'sqlite3'
 # Use thin as the app server
 gem 'thin'
 
-# THERE IS NO MORE GEMS USED
+# third-party monitoring
+gem 'newrelic_rpm'
+
+# DEPRECATED THERE IS NO MORE GEMS USED
 
 # Use SCSS for stylesheets
 #gem 'sass-rails', '~> 4.0.0'

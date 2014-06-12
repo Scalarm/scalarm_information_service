@@ -8,10 +8,9 @@ class StorageController < ApplicationController
       manager = StorageManager.new(address: address)
       manager.save
 
-      render inline: "Success: '#{address}' registered as Storage manager"
+      render json: {status: 'ok', msg: "Success: '#{address}' has been registered as Storage Manager"}
     else
-
-      render inline: "Failure: '#{address}' is already registered as Storage manager", status: 500
+      render json: {status: 'error', msg: "Failure: '#{address}' is already registered as Storage Manager"}, status: 500
     end
   end
 
@@ -24,14 +23,8 @@ class StorageController < ApplicationController
   def deregister
     address = params[:address]
 
-    if StorageManager.where(address: address).blank?
+    StorageManager.destroy_all(address: address)
 
-      render inline: "Failure: There is no Storage manager registered at '#{address}'", status: 500
-    else
-
-      StorageManager.destroy_all(address: address)
-
-      render inline: "Success: '#{address}' deregistered as Storage manager"
-    end
+    render json: {status: 'ok', msg: "Success: '#{address}' has been deregistered as Storage Manager"}
   end
 end
