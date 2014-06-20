@@ -1,33 +1,95 @@
+![Scalarm Logo](http://scalarm.com/images/scalarmNiebieskiemale.png)
+
 Scalarm Information Service
 ===========================
 
-Information Service for the Scalarm platform is a "well-known" place, where Scalarm services are registered.
+Information Service is a rails app, which implements the 'service locator' design
+pattern for Scalarm. It is a central point which gathers information about other
+Scalarm services: Experiment and Storage Manager.
 
-To run Information Service you need to fulfill the following requirements:
+This service is essential for Scalarm to work well.
 
-* Ruby version
+To run the services you need to fulfill the following requirements:
 
-We are currently working with Rubinius 2.2.1 installed via RVM.
+Ruby version
+------------
 
-* System dependencies
-
-libSQLite3 and any other required by native gems.
-
-* Configuration
-
-You need two configuration files in the config folder, and you need to generate a private key and SSL certificate.
-The first one is 'scalarm.yml', and in this file you put the following information in the YAML format:
+Currently we use and test Scalarm against MRI 2.1.1 but the Rubinius version of Ruby should be good as well.
 
 ```
-# login and password to the service
-service_login: secret_login
-service_password: secret_password
-# paths to SSL certificate and private key
-service_crt: ./config/my_cert.pem
-service_key: ./config/my_key.pem
+$ sudo curl -L https://get.rvm.io | bash
 ```
 
-The second file, 'thin.yml', includes the following information for the web server:
+Agree on anything they ask :)
+
+```
+$ source $HOME/.rvm/scripts/rvm
+$ rvm install 2.1.1
+```
+
+Also agree on anything. After the last command, rubinius version of ruby will be downloaded and installed from source.
+
+
+System dependencies
+-------------------
+
+For SL 6.4 you need to add nginx repo and then install:
+
+```
+$ yum install git vim nginx wget man libxml2 sqlite sqlite-devel R curl sysstat
+```
+
+Some requirements will be installed by rvm also during ruby installation.
+
+Any dependency required by native gems.
+
+Installation
+------------
+
+You can download it directly from GitHub
+
+```
+$ git clone https://github.com/Scalarm/scalarm_information_service
+```
+
+After downloading the code you just need to install gem requirements:
+
+```
+$ cd scalarm_information_service
+$ bundle install
+```
+
+if any dependency is missing you will be noticed :)
+
+Configuration
+-------------
+
+As the Information Service exposes HTTPS interface via the Thin web server you need to provide SSL certificate and private.
+There are two files with configuration: config/secrets.yml and config/thin.yml .
+secrets.yml is a standard configuration file added in Rails 4 to have a single place for all secrets in an application. We used this approach in our Scalarm platform. An example of config/secrets.yml:
+
+```
+development:
+  secret_key_base: 'd132fd22bc612e157d722e980c4b0525b938f225f9f7f66ea'
+  service_login: scalarm
+  service_password: scalarm
+test:
+  secret_key_base: 'd132fd22bc612e157d722e980c4b0525b938f225f9f7f66ea'
+  service_login: scalarm
+  service_password: scalarm
+production:
+  secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
+  service_login: <%= ENV["INFORMATION_SERVICE_LOGIN"] %>
+  service_password: "<%= ENV["INFORMATION_SERVICE_LOGIN"] %>"
+  service_crt: ./config/scalarm-cert.pem
+  service_key: ./config/scalarm-cert-key.pem
+```
+
+The second configuration file config/thin.yml is related to the web server called
+Thin which is used to serve Information Service by default.
+
+An example of config/thin.yml:
+
 ```
 pid: tmp/pids/thin.pid
 log: log/thin.log
@@ -35,22 +97,21 @@ environment: production
 port: 11300
 ```
 
-* Database creation and initialization
-
-Before starting Information Service you need to initialize a database with the following command:
-
-```
-$ RAILS_ENV=production rake db:migrate
-```
-
-* To start Information Service just type
+To start/stop the service you can use the provided Rakefile:
 
 ```
 $ rake service:start
-```
-
-* To stop Information Service just type
-
-```
 $ rake service:stop
 ```
+
+Before the first start of the service you will probably need to create database schemas.
+
+```
+$ RAILS_ENV=production rake db:migrate
+$ rake db:migrate
+```
+
+License
+----
+
+MIT
