@@ -1,6 +1,0 @@
-pid: tmp/pids/thin.pid
-log: log/thin.log
-environment: production
-#socket: /tmp/scalarm_information_service.sock
-port: 11300
-tag: ScalarmInformationService
