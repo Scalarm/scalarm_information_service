@@ -14,17 +14,17 @@ To run the services you need to fulfill the following requirements:
 Ruby version
 ------------
 
-Currently we use and test Scalarm against MRI 2.1.1 but the Rubinius version of Ruby should be good as well.
+Currently we use and test Scalarm against MRI 2.1.2 but the Rubinius version of Ruby should be good as well.
 
 ```
-$ sudo curl -L https://get.rvm.io | bash
+$ curl -L https://get.rvm.io | bash
 ```
 
 Agree on anything they ask :)
 
 ```
 $ source $HOME/.rvm/scripts/rvm
-$ rvm install 2.1.1
+$ rvm install 2.1.2
 ```
 
 Also agree on anything. After the last command, rubinius version of ruby will be downloaded and installed from source.
@@ -95,6 +95,7 @@ pid: tmp/pids/thin.pid
 log: log/thin.log
 environment: production
 port: 11300
+tag: ScalarmInformationService
 ```
 
 To start/stop the service you can use the provided Rakefile:

@@ -10,10 +10,13 @@ require 'yaml'
 namespace :service do
   desc 'Start the service'
   task :start => :environment do
-    command = "thin start -d --ssl --ssl-key-file #{Rails.application.secrets.service_key} --ssl-cert-file #{Rails.application.secrets.service_crt} -C config/thin.yml"
-    #command_without_ssl = "thin start -d -C config/thin.yml"
-    puts command
+    if Rails.application.secrets.service_key.nil?
+      command = "thin start -d -C config/thin.yml"
+    else
+      command = "thin start -d --ssl --ssl-key-file #{Rails.application.secrets.service_key} --ssl-cert-file #{Rails.application.secrets.service_crt} -C config/thin.yml"
+    end
 
+    puts command
     %x[#{command}]
   end
 
