@@ -48,15 +48,15 @@ Installation
 
 You can download it directly from GitHub
 
-```
-$ git clone https://github.com/Scalarm/scalarm_information_service
+```sh
+git clone https://github.com/Scalarm/scalarm_information_service
 ```
 
 After downloading the code you just need to install gem requirements:
 
-```
-$ cd scalarm_information_service
-$ bundle install
+```sh
+cd scalarm_information_service
+bundle install
 ```
 
 if any dependency is missing you will be noticed :)
@@ -68,7 +68,7 @@ As the Information Service exposes HTTPS interface via the Thin web server you n
 There are two files with configuration: config/secrets.yml and config/thin.yml .
 secrets.yml is a standard configuration file added in Rails 4 to have a single place for all secrets in an application. We used this approach in our Scalarm platform. An example of config/secrets.yml:
 
-```
+```sh
 development:
   secret_key_base: 'd132fd22bc612e157d722e980c4b0525b938f225f9f7f66ea'
   service_login: scalarm
@@ -80,7 +80,7 @@ test:
 production:
   secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
   service_login: <%= ENV["INFORMATION_SERVICE_LOGIN"] %>
-  service_password: "<%= ENV["INFORMATION_SERVICE_LOGIN"] %>"
+  service_password: <%= ENV["INFORMATION_SERVICE_PASSWORD"] %>
   service_crt: ./config/scalarm-cert.pem
   service_key: ./config/scalarm-cert-key.pem
 ```
@@ -90,7 +90,7 @@ Thin which is used to serve Information Service by default.
 
 An example of config/thin.yml:
 
-```
+```sh
 pid: tmp/pids/thin.pid
 log: log/thin.log
 environment: production
@@ -100,16 +100,16 @@ tag: ScalarmInformationService
 
 To start/stop the service you can use the provided Rakefile:
 
-```
-$ rake service:start
-$ rake service:stop
+```sh
+export RAILS_ENV=production
+rake service:start
+rake service:stop
 ```
 
 Before the first start of the service you will probably need to create database schemas.
 
 ```
-$ RAILS_ENV=production rake db:migrate
-$ rake db:migrate
+RAILS_ENV=production rake db:migrate
 ```
 
 License
