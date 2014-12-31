@@ -1,4 +1,8 @@
 ScalarmInformationService::Application.routes.draw do
+  # Status
+  get     'status' => 'status#status'
+  get     'scalarm_status' => 'status#scalarm_status'
+
   # MongoDB instances
   get     'db_instances/list'
   post    'db_instances/register'
