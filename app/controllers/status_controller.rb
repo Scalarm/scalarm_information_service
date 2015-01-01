@@ -42,10 +42,6 @@ class StatusController < ApplicationController
     message = ''
 
     if em_states.empty? or storage_states.empty?
-
-
-
-      
       status = 'failed'
       message = 'Every service should have at least one instance'
     elsif any_service_in_state?('failed', em_states, storage_states)
