@@ -37,16 +37,23 @@ class StatusController < ApplicationController
   def scalarm_status
     em_states = collect_service_states(ExperimentManager)
     storage_states = collect_service_states(StorageManager)
-    
+
     status = 'ok'
     message = ''
 
-    if any_service_in_state?('failed', em_states, storage_states)
+    if em_states.empty? or storage_states.empty?
+
+
+
+      
+      status = 'failed'
+      message = 'Every service should have at least one instance'
+    elsif any_service_in_state?('failed', em_states, storage_states)
       status = 'failed'
       message = 'One or more service failed. Please check service details.'
     elsif any_service_in_state?('warning', em_states, storage_states)
-        status = 'warning'
-        message = 'One or more service has warnings. Please check service details.'
+      status = 'warning'
+      message = 'One or more service has warnings. Please check service details.'
     end
 
     # response status for nagios probe: ok, failed, warning
