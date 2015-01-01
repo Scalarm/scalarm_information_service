@@ -2,6 +2,34 @@ require 'xmlsimple'
 require 'restclient'
 
 class StatusController < ApplicationController
+  rescue_from Exception, with: :last_rescue
+
+  def last_rescue(exception)
+    Rails.logger.error("Fatal error on status check: #{exception.to_s}\n#{exception.backtrace.join("\n")}")
+    status = 'failed'
+    message = "Fatal error: #{exception.to_s}; see logs for details."
+    http_status = :internal_server_error
+    data = {
+        date: Time.now,
+        status: status,
+        message: message
+    }
+    respond_to do |format|
+      # format.html do
+      #   html_backtrace = exception.backtrace.join('<br/>').gsub(' ', '&nbsp;')
+      #   render :text => "Fatal error: #{exception.to_s}:\n#{html_backtrace}", status: :internal_server_error
+      # end
+
+      format.json do
+        render json: data, status: http_status
+      end
+
+      format.xml do
+        render xml: convert_status_to_xml(data), status: http_status
+      end
+    end
+  end
+
   def status
     render nothing: true, status: :ok
   end
@@ -80,6 +108,11 @@ class StatusController < ApplicationController
                             content_type: :json, accept: :json
     rescue RestClient::Exception => e
       resp = e.response
+    rescue Exception => e
+      return {
+        status: 'failed',
+        content: "Exception on checking status for #{service_address}: #{e.to_s}"
+      }
     end
 
     begin
