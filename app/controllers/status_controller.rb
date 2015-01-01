@@ -15,10 +15,10 @@ class StatusController < ApplicationController
         message: message
     }
     respond_to do |format|
-      # format.html do
-      #   html_backtrace = exception.backtrace.join('<br/>').gsub(' ', '&nbsp;')
-      #   render :text => "Fatal error: #{exception.to_s}:\n#{html_backtrace}", status: :internal_server_error
-      # end
+      format.html do
+        render text: json_pretty(data),
+               status: http_status
+      end
 
       format.json do
         render json: data, status: http_status
@@ -37,7 +37,7 @@ class StatusController < ApplicationController
   def scalarm_status
     em_states = collect_service_states(ExperimentManager)
     storage_states = collect_service_states(StorageManager)
-
+    
     status = 'ok'
     message = ''
 
@@ -60,9 +60,7 @@ class StatusController < ApplicationController
 
     respond_to do |format|
       format.html do
-        render text: JSON.pretty_generate(data)
-                         .gsub("\n", '<br/>')
-                         .gsub(' ', '&nbsp;'),
+        render text: json_pretty(data),
                status: :ok
       end
       format.json do
@@ -142,6 +140,14 @@ class StatusController < ApplicationController
 
     result
   end
+
+
+  def json_pretty(data)
+    JSON.pretty_generate(data)
+        .gsub("\n", '<br/>')
+        .gsub(' ', '&nbsp;')
+  end
+
 
   private :query_status_all, :add_service_states, :any_service_in_state?,
           :collect_service_states, :convert_status_to_xml
