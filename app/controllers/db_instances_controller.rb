@@ -1,5 +1,5 @@
 class DbConfigServicesController < AbstractServiceController
-  def self.name
+  def self.service_name
     'DbInstance'
   end
 

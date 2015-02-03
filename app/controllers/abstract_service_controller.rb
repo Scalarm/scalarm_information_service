@@ -1,17 +1,9 @@
 # Methods to implement:
 # - self.model_class -> return model class
-# - self.name -> long name for response messages
+# - self.service_name -> long name for response messages
 
 class AbstractServiceController < ApplicationController
   before_filter :authenticate, :except => [:list]
-
-  # def self.name
-  #   raise 'Class method "name" not implemented!'
-  # end
-  #
-  # def self.model_class
-  #   raise 'Class method "model_class" not implemented!'
-  # end
 
   def register
     address = params[:address]

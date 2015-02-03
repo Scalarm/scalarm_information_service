@@ -1,5 +1,5 @@
 class ExperimentsController < AbstractServiceController
-  def self.name
+  def self.service_name
     'Experiment Manager'
   end
 

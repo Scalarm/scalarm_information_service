@@ -1,5 +1,5 @@
 class StorageController < AbstractServiceController
-  def self.name
+  def self.service_name
     'Storage Manager'
   end
 
