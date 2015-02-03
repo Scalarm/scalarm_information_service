@@ -1,6 +1,6 @@
 class ChartController < AbstractServiceController
   def self.service_name
-    'Chart aaa Service'
+    'Chart Service'
   end
 
   def self.model_class
