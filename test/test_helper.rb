@@ -12,4 +12,14 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+
+  def authorize_request(request)
+    user = Rails.application.secrets.service_login
+    pw = Rails.application.secrets.service_password
+    request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(user,pw)
+  end
+
+  def clear_authorization(request)
+    request.env['HTTP_AUTHORIZATION'] = nil
+  end
 end
