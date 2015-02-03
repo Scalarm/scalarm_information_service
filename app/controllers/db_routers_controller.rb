@@ -1,5 +1,5 @@
 class DbRoutersController < AbstractServiceController
-  def self.name
+  def self.service_name
     'DbRouter'
   end
 
