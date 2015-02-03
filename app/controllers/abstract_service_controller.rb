@@ -12,9 +12,9 @@ class AbstractServiceController < ApplicationController
       manager = self.class.model_class.new(address: address)
       manager.save
 
-      render json: {status: 'ok', msg: "Success: '#{address}' has been registered as #{self.class.name}"}
+      render json: {status: 'ok', msg: "Success: '#{address}' has been registered as #{self.class.service_name}"}
     else
-      render json: {status: 'error', msg: "Failure: '#{address}' is already registered as #{self.class.name}"}, status: 500
+      render json: {status: 'error', msg: "Failure: '#{address}' is already registered as #{self.class.service_name}"}, status: 500
     end
   end
 
@@ -29,6 +29,6 @@ class AbstractServiceController < ApplicationController
 
     self.model_class.destroy_all(address: address)
 
-    render json: {status: 'ok', msg: "Success: '#{address}' has been deregistered as #{self.class.name}"}
+    render json: {status: 'ok', msg: "Success: '#{address}' has been deregistered as #{self.class.service_name}"}
   end
 end
