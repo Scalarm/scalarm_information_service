@@ -27,7 +27,7 @@ class AbstractServiceController < ApplicationController
   def deregister
     address = params[:address]
 
-    self.model_class.destroy_all(address: address)
+    self.class.model_class.destroy_all(address: address)
 
     render json: {status: 'ok', msg: "Success: '#{address}' has been deregistered as #{self.class.service_name}"}
   end

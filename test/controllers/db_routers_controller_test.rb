@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class StorageControllerTest < ActionController::TestCase
+class DbRoutersControllerTest < ActionController::TestCase
   add_test_get_list
   add_test_register_address
   add_test_register_address_unauthorized
