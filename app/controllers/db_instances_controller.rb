@@ -1,4 +1,4 @@
-class DbConfigServicesController < AbstractServiceController
+class DbInstancesController < AbstractServiceController
   def self.service_name
     'DbInstance'
   end
