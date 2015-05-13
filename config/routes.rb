@@ -50,6 +50,10 @@ ScalarmInformationService::Application.routes.draw do
   get 'chart_services' => 'chart#list'
   delete 'chart_services' => 'chart#deregister'
 
+  post 'experiment_supervisors' => 'supervisor#register'
+  get 'experiment_supervisors' => 'supervisor#list'
+  delete 'experiment_supervisors' => 'supervisor#deregister'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
