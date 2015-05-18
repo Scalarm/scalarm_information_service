@@ -22,7 +22,13 @@ namespace :service do
 
   desc 'Stop the service'
   task :stop => :environment do
-    %x[thin stop -C config/thin.yml]
+    command = 'thin stop -C config/thin.yml'
+    
+    puts command
+    %x[#{command}]
   end
 
+  desc 'Restart the service'
+  task :restart => [:stop, :start] {}
+  
 end
