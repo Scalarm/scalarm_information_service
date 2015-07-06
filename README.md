@@ -98,6 +98,8 @@ port: 11300
 tag: ScalarmInformationService
 ```
 
+The web server uses SSL in production mode. Please generate OpenSSL key and certificate pair: ``scalarm-cert-key.pem`` and ``scalarm-cert.pem`` in order to launch thin server with HTTPS. You can follow this tutorial: http://www.akadia.com/services/ssh_test_certificate.html
+
 To start/stop the service you can use the provided Rakefile:
 
 ```sh
