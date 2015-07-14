@@ -1,0 +1,19 @@
+# Scalarm configuration
+config/secrets.yml
+config/thin.yml
+
+# IDE settings
+.idea/
+
+# temporary files
+tmp/
+log/
+
+# database
+db/development.sqlite3
+db/test.sqlite3
+db/production.sqlite3
+
+# OSX specific
+.DS_Store
+config/DS_Store
