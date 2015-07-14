@@ -37,17 +37,18 @@ class StatusController < ApplicationController
   def scalarm_status
     em_states = collect_service_states(ExperimentManager)
     storage_states = collect_service_states(StorageManager)
+    chart_states = collect_service_states(ChartService)
 
     status = 'ok'
     message = ''
 
-    if em_states.empty? or storage_states.empty?
+    if em_states.empty? or storage_states.empty? or chart_states.empty?
       status = 'failed'
       message = 'Every service should have at least one instance'
-    elsif any_service_in_state?('failed', em_states, storage_states)
+    elsif any_service_in_state?('failed', em_states, storage_states, chart_states)
       status = 'failed'
       message = 'One or more service failed. Please check service details.'
-    elsif any_service_in_state?('warning', em_states, storage_states)
+    elsif any_service_in_state?('warning', em_states, storage_states, chart_states)
       status = 'warning'
       message = 'One or more service has warnings. Please check service details.'
     end
@@ -60,6 +61,7 @@ class StatusController < ApplicationController
 
     add_service_states(data, em_states, 'experiment_manager')
     add_service_states(data, storage_states, 'storage_manager')
+    add_service_states(data, chart_states, 'chart_service')
 
     respond_to do |format|
       format.html do

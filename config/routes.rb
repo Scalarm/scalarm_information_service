@@ -46,6 +46,18 @@ ScalarmInformationService::Application.routes.draw do
   get 'storage_managers' => 'storage#list'
   delete 'storage_managers' => 'storage#deregister'
 
+  post 'chart_services' => 'chart#register'
+  get 'chart_services' => 'chart#list'
+  delete 'chart_services' => 'chart#deregister'
+
+  # aliases for data explorer
+  post 'data_explorers' => 'chart#register'
+  get 'data_explorers' => 'chart#list'
+  delete 'data_explorers' => 'chart#deregister'
+
+  post 'experiment_supervisors' => 'supervisor#register'
+  get 'experiment_supervisors' => 'supervisor#list'
+  delete 'experiment_supervisors' => 'supervisor#deregister'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
