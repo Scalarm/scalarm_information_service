@@ -17,3 +17,6 @@ gem 'xml-simple'
 
 # communication with services
 gem 'rest-client', '~> 1.6.7'
+
+# testing
+gem 'mocha'

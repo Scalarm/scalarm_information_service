@@ -2,7 +2,7 @@ require 'xmlsimple'
 require 'restclient'
 
 class StatusController < ApplicationController
-  rescue_from Exception, with: :last_rescue
+  rescue_from StandardError, with: :last_rescue
 
   def last_rescue(exception)
     Rails.logger.error("Fatal error on status check: #{exception.to_s}\n#{exception.backtrace.join("\n")}")
@@ -35,20 +35,19 @@ class StatusController < ApplicationController
   end
 
   def scalarm_status
-    em_states = collect_service_states(ExperimentManager)
-    storage_states = collect_service_states(StorageManager)
-    chart_states = collect_service_states(ChartService)
+    service_classes = [ExperimentManager, StorageManager, ChartService, ExperimentSupervisor]
+    states = Hash[service_classes.collect { |service_class| [service_class, collect_service_states(service_class)] }]
 
     status = 'ok'
     message = ''
 
-    if em_states.empty? or storage_states.empty? or chart_states.empty?
+    if states.values.any? &:empty?
       status = 'failed'
       message = 'Every service should have at least one instance'
-    elsif any_service_in_state?('failed', em_states, storage_states, chart_states)
+    elsif any_service_in_state?('failed', *states.values)
       status = 'failed'
       message = 'One or more service failed. Please check service details.'
-    elsif any_service_in_state?('warning', em_states, storage_states, chart_states)
+    elsif any_service_in_state?('warning', *states.values)
       status = 'warning'
       message = 'One or more service has warnings. Please check service details.'
     end
@@ -59,9 +58,9 @@ class StatusController < ApplicationController
         status: status, message: message
     }
 
-    add_service_states(data, em_states, 'experiment_manager')
-    add_service_states(data, storage_states, 'storage_manager')
-    add_service_states(data, chart_states, 'chart_service')
+    states.each do |service_class, this_service_states|
+      add_service_states(data, this_service_states, service_class.to_s.underscore)
+    end
 
     respond_to do |format|
       format.html do
@@ -104,6 +103,10 @@ class StatusController < ApplicationController
     end
   end
 
+  # Queries status of serivce listening at service_address
+  # Returns Hash with:
+  # * status: 'failed' or 'ok' or 'warning'
+  # * content (optional): an additional message
   def query_status_all(service_address, scheme='https')
     begin
       resp = RestClient.get "#{scheme}://#{service_address}/status",
