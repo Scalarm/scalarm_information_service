@@ -58,8 +58,22 @@ After downloading the code you just need to install gem requirements:
 cd scalarm_information_service
 bundle install
 ```
-
 if any dependency is missing you will be noticed :)
+
+### OSX El Capitan
+
+On OSX El Capitan, ``bundle install`` command can fail with message:
+```
+ERROR:  Error installing eventmachine:
+	ERROR: Failed to build gem native extension.
+(...)
+In file included from binder.cpp:20:
+./project.h:107:10: fatal error: 'openssl/ssl.h' file not found
+#include <openssl/ssl.h>
+```
+Please take this guide: http://stackoverflow.com/a/32964832 to force install of OpenSSL.
+
+
 
 Configuration
 -------------
