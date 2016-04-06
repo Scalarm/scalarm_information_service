@@ -88,11 +88,8 @@ PLATFORMS
 DEPENDENCIES
   mocha
   newrelic_rpm
-  rails (~> 4.1.14)
+  rails (~> 4.1.15)
   rest-client (~> 1.6.7)
   sqlite3
   thin
   xml-simple
-
-BUNDLED WITH
-   1.11.2
