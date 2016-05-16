@@ -29,6 +29,11 @@ GEM
       tzinfo (~> 1.1)
     arel (5.0.1.20140414130214)
     builder (3.2.2)
+    ci_reporter (2.0.0)
+      builder (>= 2.1.2)
+    ci_reporter_minitest (1.0.0)
+      ci_reporter (~> 2.0)
+      minitest (~> 5.0)
     concurrent-ruby (1.0.1)
     daemons (1.2.3)
     erubis (2.7.0)
@@ -86,6 +91,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  ci_reporter_minitest
   mocha
   newrelic_rpm
   rails (~> 4.1.15)
