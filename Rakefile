@@ -47,5 +47,21 @@ namespace :service do
 
   desc 'Restart the service'
   task :restart => [:stop, :start] {}
-  
+
+  desc 'Create default configuration files if these do not exist'
+  task :ensure_config do
+    copy_example_config_if_not_exists('config/secrets.yml')
+    copy_example_config_if_not_exists('config/thin.yml')
+  end
+
+end
+
+def copy_example_config_if_not_exists(base_name, prefix='example')
+  config = base_name
+  example_config = "#{base_name}.example"
+
+  unless File.exists?(config)
+    puts "Copying #{example_config} to #{config}"
+    FileUtils.cp(example_config, config)
+  end
 end
