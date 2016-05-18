@@ -114,7 +114,7 @@ class StatusController < ApplicationController
                             content_type: :json, accept: :json
     rescue RestClient::Exception => e
       resp = e.response
-    rescue Exception => e
+    rescue => e
       return {
         status: 'failed',
         content: "Exception on checking status for #{service_address}: #{e.to_s}"
