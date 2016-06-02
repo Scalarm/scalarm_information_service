@@ -1,5 +1,7 @@
 ![Scalarm Logo](http://scalarm.com/images/scalarmNiebieskiemale.png)
 
+[![Build Status](https://travis-ci.org/Scalarm/scalarm_information_service.svg?branch=master)](https://travis-ci.org/Scalarm/scalarm_information_service)
+
 Scalarm Information Service
 ===========================
 

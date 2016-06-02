@@ -1,11 +1,28 @@
 # Add your own tasks in files placed in lib/tasks ending in .rake,
 # for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
 
+require 'ci/reporter/rake/minitest'
 require File.expand_path('../config/application', __FILE__)
 
 ScalarmInformationService::Application.load_tasks
 
 require 'yaml'
+
+task :check_test_env do
+  raise 'RAILS_ENV not set to test' unless Rails.env.test?
+end
+
+namespace :test do |ns|
+  # add dependency to check_test_env for each test task
+  ns.tasks.each do |t|
+    task_name = t.to_s.match(/test:(.*)/)[1]
+    task task_name.to_sym => [:check_test_env] unless task_name.blank?
+  end
+end
+
+namespace :ci do
+  task :all => ['ci:setup:minitest', 'test']
+end
 
 namespace :service do
   desc 'Start the service'
@@ -30,5 +47,21 @@ namespace :service do
 
   desc 'Restart the service'
   task :restart => [:stop, :start] {}
-  
+
+  desc 'Create default configuration files if these do not exist'
+  task :ensure_config do
+    copy_example_config_if_not_exists('config/secrets.yml')
+    copy_example_config_if_not_exists('config/thin.yml')
+  end
+
+end
+
+def copy_example_config_if_not_exists(base_name, prefix='example')
+  config = base_name
+  example_config = "#{base_name}.example"
+
+  unless File.exists?(config)
+    puts "Copying #{example_config} to #{config}"
+    FileUtils.cp(example_config, config)
+  end
 end

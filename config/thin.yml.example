@@ -1,0 +1,3 @@
+pid: tmp/pids/thin.pid
+log: log/thin.log
+socket: /tmp/scalarm_information_service.sock
